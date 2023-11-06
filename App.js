@@ -1,15 +1,20 @@
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
-//Task = todo item
+//Task = todo item - component
 
 export default function App() {
 
+  const[enteredTask, setEnteredTask] = useState(''); //enteredTask = taskname
+  const[tasks, setTasks] = useState([]); //taskList = [task1, task2, task3
+
   const taskInputHandler = (enteredText) => {
     console.log(enteredText);
+    setEnteredTask(enteredText);
   }
   const addTaskHandler = () => {
     console.log("should add task");
+    setTasks(currentTasks => [...currentTasks, enteredTask]);
   }
 
   return (
@@ -23,7 +28,7 @@ export default function App() {
       />
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => addTaskHandler}>
+        onPress={() => addTaskHandler()}>
         <Text style={styles.addButtonText}>Add Task</Text>
       </TouchableOpacity>
       <ScrollView>
