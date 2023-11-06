@@ -1,20 +1,44 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
-//Task = todo item - component
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, FlatList } from 'react-native';
+import TaskItem from './components/taskItem'; //Task = todo item - component
 
 export default function App() {
 
-  const[enteredTask, setEnteredTask] = useState(''); //enteredTask = taskname
-  const[tasks, setTasks] = useState([]); //taskList = [task1, task2, task3
+  const[enteredTask, setEnteredTask] = useState(''); //enteredTask = taskname - standaard is dir een lege string
+  const[tasks, setTasks] = useState([]); //taskList = [task1, task2, task3]
+
+  const [editIndex, setEditIndex] = useState(-1); //editIndex = -1 
 
   const taskInputHandler = (enteredText) => {
-    console.log(enteredText);
+    /*console.log(enteredText);*/
     setEnteredTask(enteredText);
   }
   const addTaskHandler = () => {
+    console.log(enteredTask);
     console.log("should add task");
     setTasks(currentTasks => [...currentTasks, enteredTask]);
+  }
+
+  const renderItem = (itemData) => {
+    return(
+    <View style={styles.task}>
+      {console.log(itemData)}
+    <Text style={styles.itemList}>{itemData.item}</Text>
+    <View style={styles.taskButtons}>
+      <TouchableOpacity
+        onPress={() => { console.log("should delete task", itemData.index) }}>
+        <Text style={styles.deleteButton}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  </View >
+    )
+  }
+
+  const deleteTaskHandler = (itemData) => {
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(itemData, 1);
+    setTasks(updatedTasks); 
   }
 
   return (
@@ -31,26 +55,8 @@ export default function App() {
         onPress={() => addTaskHandler()}>
         <Text style={styles.addButtonText}>Add Task</Text>
       </TouchableOpacity>
-      <ScrollView>
-        <View style={styles.task}>
-          <Text style={styles.itemList}>taskname goes here</Text>
-          <View style={styles.taskButtons}>
-            <TouchableOpacity
-              onPress={() => { console.log("should delete task") }}>
-              <Text style={styles.deleteButton}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        </View >
-        <View style={styles.task}>
-          <Text style={styles.itemList}>taskname goes here</Text>
-          <View style={styles.taskButtons}>
-            <TouchableOpacity
-              onPress={() => { console.log("should delete task") }}>
-              <Text style={styles.deleteButton}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        </View >
-      </ScrollView>
+      <FlatList renderItem={renderItem} data={tasks}/>
+
     </View >
   );
 }
